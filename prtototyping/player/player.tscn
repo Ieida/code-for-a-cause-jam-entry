@@ -1,0 +1,116 @@
+[gd_scene load_steps=7 format=3 uid="uid://caao78fb6xba"]
+
+[ext_resource type="Script" path="res://prtototyping/player/player.gd" id="1_1ikub"]
+[ext_resource type="SpriteFrames" uid="uid://tt7vara404c8" path="res://prtototyping/character/sprite_frames.tres" id="1_wtdkr"]
+[ext_resource type="Script" path="res://extra_scripts/follow.gd" id="3_7iu7l"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nm7ra"]
+radius = 8.0
+height = 42.0
+
+[sub_resource type="GDScript" id="GDScript_i50ve"]
+resource_name = "roll"
+script/source = "extends Node
+
+
+signal ended
+
+
+@onready var sprite: AnimatedSprite2D = $\"../AnimatedSprite2D\"
+@onready var player := $\"..\"
+@export var speed: float = 512
+var direction: float
+var is_rolling: bool
+
+
+func _on_anim_finished():
+	if sprite.animation == &\"roll\":
+		player.can_move = true
+		is_rolling = false
+		ended.emit()
+
+
+func _physics_process(_delta: float) -> void:
+	if is_rolling:
+		player.velocity.x = direction * speed
+
+
+func _ready() -> void:
+	sprite.animation_finished.connect(_on_anim_finished)
+
+
+func start(roll_direction: float):
+	direction = roll_direction
+	player.can_move = false
+	sprite.play(&\"roll\")
+	is_rolling = true
+"
+
+[sub_resource type="GDScript" id="GDScript_0whg7"]
+resource_name = "dash"
+script/source = "extends Node
+
+
+@onready var sprite: AnimatedSprite2D = $\"../AnimatedSprite2D\"
+@onready var player := $\"..\"
+@export var duration: float = 0.2
+@export var speed: float = 1024
+var direction: float
+var duration_time_elapsed: float
+var is_dashing: bool
+
+
+func _on_anim_finished():
+	if sprite.animation == &\"dash_start\":
+		sprite.play(&\"dash_loop\")
+
+
+func _physics_process(delta: float) -> void:
+	if is_dashing:
+		player.velocity.x = direction * speed
+		duration_time_elapsed += delta
+		if duration_time_elapsed >= duration:
+			player.apply_gravity = true
+			player.can_move = true
+			if player.is_falling: sprite.play(&\"float\")
+			duration_time_elapsed = 0.0
+			is_dashing = false
+
+
+func _ready() -> void:
+	sprite.animation_finished.connect(_on_anim_finished)
+
+
+func start(dash_direction: float):
+	direction = dash_direction
+	player.apply_gravity = false
+	player.can_move = false
+	player.velocity.y = 0
+	sprite.play(&\"dash_start\")
+	is_dashing = true
+"
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_1ikub")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_nm7ra")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -10)
+sprite_frames = ExtResource("1_wtdkr")
+animation = &"roll"
+frame = 5
+frame_progress = 1.0
+
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("target")]
+top_level = true
+script = ExtResource("3_7iu7l")
+target = NodePath("..")
+
+[node name="Roll" type="Node" parent="."]
+script = SubResource("GDScript_i50ve")
+
+[node name="Dash" type="Node" parent="."]
+script = SubResource("GDScript_0whg7")
