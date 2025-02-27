@@ -15,50 +15,9 @@ shader = ExtResource("2_0qtmk")
 shader_parameter/outline_color = Color(0.97, 0.2425, 0.65475, 1)
 shader_parameter/progress = 1.0
 
-[sub_resource type="GDScript" id="GDScript_i50ve"]
-resource_name = "roll"
-script/source = "extends Node
-
-
-@onready var default_coll_shape := $\"../CollisionShape2D\"
-@onready var roll_coll_shape := $\"../RollCollisionShape\"
-@onready var sprite: AnimatedSprite2D = $\"../AnimatedSprite2D\"
-@onready var player := $\"..\"
-@export var speed: float = 512
-var direction: float
-var is_rolling: bool
-
-
-func _on_anim_finished():
-	if sprite.animation == &\"roll\":
-		player.can_move = true
-		default_coll_shape.disabled = false
-		roll_coll_shape.disabled = true
-		is_rolling = false
-
-
-func _physics_process(_delta: float) -> void:
-	if is_rolling:
-		player.velocity.x = direction * speed
-
-
-func _ready() -> void:
-	roll_coll_shape.disabled = true
-	sprite.animation_finished.connect(_on_anim_finished)
-
-
-func start(roll_direction: float):
-	direction = roll_direction
-	player.can_move = false
-	default_coll_shape.disabled = true
-	roll_coll_shape.disabled = false
-	sprite.play(&\"roll\")
-	is_rolling = true
-"
-
 [sub_resource type="GDScript" id="GDScript_0whg7"]
 resource_name = "dash"
-script/source = "extends Node
+script/source = "extends Ability
 
 
 @onready var sprite: AnimatedSprite2D = $\"../AnimatedSprite2D\"
@@ -75,7 +34,7 @@ func _on_anim_finished():
 		sprite.play(&\"dash_loop\")
 
 
-func _physics_process(delta: float) -> void:
+func physics_update(delta: float) -> void:
 	if is_dashing:
 		player.velocity.x = direction * speed
 		duration_time_elapsed += delta
@@ -100,6 +59,47 @@ func start(dash_direction: float):
 	is_dashing = true
 "
 
+[sub_resource type="GDScript" id="GDScript_i50ve"]
+resource_name = "roll"
+script/source = "extends Ability
+
+
+@onready var default_coll_shape := $\"../CollisionShape2D\"
+@onready var roll_coll_shape := $\"../RollCollisionShape\"
+@onready var sprite: AnimatedSprite2D = $\"../AnimatedSprite2D\"
+@onready var player := $\"..\"
+@export var speed: float = 512
+var direction: float
+var is_rolling: bool
+
+
+func _on_anim_finished():
+	if sprite.animation == &\"roll\":
+		player.can_move = true
+		default_coll_shape.disabled = false
+		roll_coll_shape.disabled = true
+		is_rolling = false
+
+
+func physics_update(_delta: float) -> void:
+	if is_rolling:
+		player.velocity.x = direction * speed
+
+
+func _ready() -> void:
+	roll_coll_shape.disabled = true
+	sprite.animation_finished.connect(_on_anim_finished)
+
+
+func start(roll_direction: float):
+	direction = roll_direction
+	player.can_move = false
+	default_coll_shape.disabled = true
+	roll_coll_shape.disabled = false
+	sprite.play(&\"roll\")
+	is_rolling = true
+"
+
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_1ikub")
 
@@ -122,8 +122,8 @@ top_level = true
 script = ExtResource("3_7iu7l")
 target = NodePath("..")
 
-[node name="Roll" type="Node" parent="."]
-script = SubResource("GDScript_i50ve")
-
-[node name="Dash" type="Node" parent="."]
+[node name="Dash" type="Node2D" parent="."]
 script = SubResource("GDScript_0whg7")
+
+[node name="Roll" type="Node2D" parent="."]
+script = SubResource("GDScript_i50ve")

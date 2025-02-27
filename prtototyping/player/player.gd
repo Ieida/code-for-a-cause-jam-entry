@@ -2,8 +2,8 @@ extends CharacterBody2D
 
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var dash := $Dash
-@onready var roll := $Roll
+@onready var dash: Ability = $Dash
+@onready var roll: Ability = $Roll
 @export var gravity: float = 981
 @export var speed: float = 128
 @export var jump_velocity = -300
@@ -17,6 +17,7 @@ var can_jump: bool
 var coyote_time: float
 var ground_coyote_time: float
 
+
 func _on_anim_finished():
 	if animated_sprite.animation == &"float":
 		animated_sprite.play(&"fall")
@@ -27,6 +28,9 @@ func _on_anim_finished():
 
 
 func _physics_process(delta: float) -> void:
+	dash.physics_update(delta)
+	roll.physics_update(delta)
+	
 	# Add the gravity.
 	if apply_gravity and not is_on_floor():
 		velocity.y += gravity * delta
@@ -99,3 +103,5 @@ func _physics_process(delta: float) -> void:
 func _ready() -> void:
 	animated_sprite.animation_finished.connect(_on_anim_finished)
 	animated_sprite.play(&"idle")
+	dash.ability_ready()
+	roll.ability_ready()
