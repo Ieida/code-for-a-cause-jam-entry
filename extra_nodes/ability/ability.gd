@@ -5,9 +5,9 @@ func ability_ready():
 	pass
 
 
-func physics_update(delta: float):
+func physics_update(_delta: float):
 	pass
 
 
-func update(delta: float):
+func update(_delta: float):
 	pass
