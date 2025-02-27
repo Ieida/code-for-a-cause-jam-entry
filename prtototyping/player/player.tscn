@@ -13,7 +13,6 @@ size = Vector2(16, 42)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_3nph4"]
 shader = ExtResource("2_0qtmk")
 shader_parameter/outline_color = Color(0.97, 0.2425, 0.65475, 1)
-shader_parameter/progress = 1.0
 
 [sub_resource type="GDScript" id="GDScript_0whg7"]
 resource_name = "dash"
@@ -115,7 +114,7 @@ texture_filter = 1
 material = SubResource("ShaderMaterial_3nph4")
 position = Vector2(0, -9)
 sprite_frames = ExtResource("1_wtdkr")
-animation = &"roll"
+animation = &"idle"
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("target")]
 top_level = true

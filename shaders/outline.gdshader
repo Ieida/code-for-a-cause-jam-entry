@@ -1,7 +1,6 @@
 shader_type canvas_item;
 
 uniform vec4 outline_color: source_color;
-uniform float progress: hint_range(0.0, 1.0);
 
 void fragment() {
 	if (COLOR.a==1.){
