@@ -71,8 +71,8 @@ func _physics_process(delta: float) -> void:
 	
 	# Animations
 	if can_move:
-		if not is_zero_approx(direction):
-			animated_sprite.flip_h = velocity.x < 0.0
+		if velocity.x > 2.0: animated_sprite.flip_h = false
+		if velocity.x < -2.0: animated_sprite.flip_h = true
 		if is_on_floor():
 			# If grounded, set ground coyote.
 			ground_coyote_time = default_ground_coyote_time
