@@ -1,54 +1,23 @@
-[gd_scene load_steps=7 format=3 uid="uid://caao78fb6xba"]
+[gd_scene load_steps=10 format=3 uid="uid://caao78fb6xba"]
 
 [ext_resource type="Script" path="res://prtototyping/player/player.gd" id="1_1ikub"]
 [ext_resource type="SpriteFrames" uid="uid://tt7vara404c8" path="res://prtototyping/character/sprite_frames.tres" id="1_wtdkr"]
+[ext_resource type="Shader" path="res://shaders/outline.gdshader" id="2_0qtmk"]
 [ext_resource type="Script" path="res://extra_scripts/follow.gd" id="3_7iu7l"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nm7ra"]
-radius = 8.0
-height = 42.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0ga1l"]
+size = Vector2(16, 42)
 
-[sub_resource type="GDScript" id="GDScript_i50ve"]
-resource_name = "roll"
-script/source = "extends Node
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wk74f"]
 
-
-signal ended
-
-
-@onready var sprite: AnimatedSprite2D = $\"../AnimatedSprite2D\"
-@onready var player := $\"..\"
-@export var speed: float = 512
-var direction: float
-var is_rolling: bool
-
-
-func _on_anim_finished():
-	if sprite.animation == &\"roll\":
-		player.can_move = true
-		is_rolling = false
-		ended.emit()
-
-
-func _physics_process(_delta: float) -> void:
-	if is_rolling:
-		player.velocity.x = direction * speed
-
-
-func _ready() -> void:
-	sprite.animation_finished.connect(_on_anim_finished)
-
-
-func start(roll_direction: float):
-	direction = roll_direction
-	player.can_move = false
-	sprite.play(&\"roll\")
-	is_rolling = true
-"
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3nph4"]
+shader = ExtResource("2_0qtmk")
+shader_parameter/outline_color = Color(0.97, 0.2425, 0.65475, 1)
+shader_parameter/progress = 1.0
 
 [sub_resource type="GDScript" id="GDScript_0whg7"]
 resource_name = "dash"
-script/source = "extends Node
+script/source = "extends Ability
 
 
 @onready var sprite: AnimatedSprite2D = $\"../AnimatedSprite2D\"
@@ -65,7 +34,7 @@ func _on_anim_finished():
 		sprite.play(&\"dash_loop\")
 
 
-func _physics_process(delta: float) -> void:
+func physics_update(delta: float) -> void:
 	if is_dashing:
 		player.velocity.x = direction * speed
 		duration_time_elapsed += delta
@@ -90,27 +59,71 @@ func start(dash_direction: float):
 	is_dashing = true
 "
 
+[sub_resource type="GDScript" id="GDScript_i50ve"]
+resource_name = "roll"
+script/source = "extends Ability
+
+
+@onready var default_coll_shape := $\"../CollisionShape2D\"
+@onready var roll_coll_shape := $\"../RollCollisionShape\"
+@onready var sprite: AnimatedSprite2D = $\"../AnimatedSprite2D\"
+@onready var player := $\"..\"
+@export var speed: float = 512
+var direction: float
+var is_rolling: bool
+
+
+func _on_anim_finished():
+	if sprite.animation == &\"roll\":
+		player.can_move = true
+		default_coll_shape.disabled = false
+		roll_coll_shape.disabled = true
+		is_rolling = false
+
+
+func physics_update(_delta: float) -> void:
+	if is_rolling:
+		player.velocity.x = direction * speed
+
+
+func _ready() -> void:
+	roll_coll_shape.disabled = true
+	sprite.animation_finished.connect(_on_anim_finished)
+
+
+func start(roll_direction: float):
+	direction = roll_direction
+	player.can_move = false
+	default_coll_shape.disabled = true
+	roll_coll_shape.disabled = false
+	sprite.play(&\"roll\")
+	is_rolling = true
+"
+
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_1ikub")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CapsuleShape2D_nm7ra")
+shape = SubResource("RectangleShape2D_0ga1l")
+
+[node name="RollCollisionShape" type="CollisionShape2D" parent="."]
+position = Vector2(0, 11)
+shape = SubResource("RectangleShape2D_wk74f")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
-position = Vector2(0, -10)
+material = SubResource("ShaderMaterial_3nph4")
+position = Vector2(0, -9)
 sprite_frames = ExtResource("1_wtdkr")
 animation = &"roll"
-frame = 5
-frame_progress = 1.0
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("target")]
 top_level = true
 script = ExtResource("3_7iu7l")
 target = NodePath("..")
 
-[node name="Roll" type="Node" parent="."]
-script = SubResource("GDScript_i50ve")
-
-[node name="Dash" type="Node" parent="."]
+[node name="Dash" type="Node2D" parent="."]
 script = SubResource("GDScript_0whg7")
+
+[node name="Roll" type="Node2D" parent="."]
+script = SubResource("GDScript_i50ve")
