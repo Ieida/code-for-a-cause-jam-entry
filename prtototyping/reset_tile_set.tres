@@ -1,0 +1,11 @@
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://cqlnyo4jv2s2y"]
+
+[ext_resource type="PackedScene" uid="uid://c20uufkfv12qm" path="res://extra_nodes/reset_tile/reset_tile.tscn" id="1_di2jm"]
+
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_l0opo"]
+scenes/1/scene = ExtResource("1_di2jm")
+
+[resource]
+tile_size = Vector2i(32, 32)
+physics_layer_0/collision_layer = 1
+sources/2 = SubResource("TileSetScenesCollectionSource_l0opo")

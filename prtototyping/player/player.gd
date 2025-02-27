@@ -10,9 +10,10 @@ extends CharacterBody2D
 @export var default_coyote_time: float = 0.5
 @export var default_ground_coyote_time: float = 0.5
 var apply_gravity: bool = true
+var can_jump: bool
 var can_move: bool = true
 var is_falling: bool
-var can_jump: bool
+var spawn_position: Vector2
 #coyote time var
 var coyote_time: float
 var ground_coyote_time: float
@@ -101,7 +102,12 @@ func _physics_process(delta: float) -> void:
 
 
 func _ready() -> void:
+	spawn_position = global_position
 	animated_sprite.animation_finished.connect(_on_anim_finished)
 	animated_sprite.play(&"idle")
 	dash.ability_ready()
 	roll.ability_ready()
+
+
+func respawn():
+	global_position = spawn_position
