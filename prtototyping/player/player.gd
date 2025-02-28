@@ -89,7 +89,7 @@ func _physics_process(delta: float) -> void:
 				animated_sprite.play(&"idle")
 		elif velocity.y < -2.0:
 			animated_sprite.play(&"ascend")
-		# Of not grounded, deduct coyote (jump still allowed)
+		# If not grounded, deduct coyote (jump still allowed)
 		elif ground_coyote_time > 0:
 			ground_coyote_time -= delta
 		

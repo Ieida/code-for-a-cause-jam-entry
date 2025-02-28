@@ -22,12 +22,13 @@ script/source = "extends Ability
 
 @onready var sprite: AnimatedSprite2D = $\"../AnimatedSprite2D\"
 @onready var player := $\"..\"
-@export var duration: float = 0.2
-@export var speed: float = 1024
+@export var dash_multiplier: float = 1.5
+@export var dash_duration: float
+var speed: float
 var direction: float
 var duration_time_elapsed: float
 var is_dashing: bool
-
+var has_dashed: bool
 
 func _on_anim_finished():
 	if sprite.animation == &\"dash_start\":
@@ -35,15 +36,23 @@ func _on_anim_finished():
 
 
 func physics_update(delta: float) -> void:
+	if speed > player.speed:
+		is_dashing = true
+		has_dashed = true
+		speed -= (1 + (1/dash_duration) - 1) * dash_multiplier * 100 * delta
+	else:
+		is_dashing = false
+		speed = 0
+	
 	if is_dashing:
 		player.velocity.x = direction * speed
 		duration_time_elapsed += delta
-		if duration_time_elapsed >= duration:
+	elif has_dashed:
 			player.apply_gravity = true
 			player.can_move = true
 			if player.is_falling: sprite.play(&\"float\")
 			duration_time_elapsed = 0.0
-			is_dashing = false
+			has_dashed = false
 
 
 func _ready() -> void:
@@ -51,12 +60,12 @@ func _ready() -> void:
 
 
 func start(dash_direction: float):
+	speed = player.speed * dash_multiplier
 	direction = dash_direction
 	player.apply_gravity = false
 	player.can_move = false
 	player.velocity.y = 0
 	sprite.play(&\"dash_start\")
-	is_dashing = true
 "
 
 [sub_resource type="GDScript" id="GDScript_i50ve"]
@@ -124,6 +133,8 @@ target = NodePath("..")
 
 [node name="Dash" type="Node2D" parent="."]
 script = SubResource("GDScript_0whg7")
+dash_multiplier = 15.0
+dash_duration = 0.2
 
 [node name="Roll" type="Node2D" parent="."]
 script = SubResource("GDScript_i50ve")
