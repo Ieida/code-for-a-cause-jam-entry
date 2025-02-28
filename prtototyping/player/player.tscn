@@ -22,37 +22,30 @@ script/source = "extends Ability
 
 @onready var sprite: AnimatedSprite2D = $\"../AnimatedSprite2D\"
 @onready var player := $\"..\"
-@export var dash_multiplier: float = 1.5
-@export var dash_duration: float
-var speed: float
+@export var initial_speed: float = 4096
 var direction: float
-var duration_time_elapsed: float
 var is_dashing: bool
-var has_dashed: bool
+
 
 func _on_anim_finished():
 	if sprite.animation == &\"dash_start\":
+		player.velocity.x = direction * initial_speed
 		sprite.play(&\"dash_loop\")
+		is_dashing = true
 
 
 func physics_update(delta: float) -> void:
-	if speed > player.speed:
-		is_dashing = true
-		has_dashed = true
-		speed -= (1 + (1/dash_duration) - 1) * dash_multiplier * 100 * delta
-	else:
-		is_dashing = false
-		speed = 0
-	
 	if is_dashing:
-		player.velocity.x = direction * speed
-		duration_time_elapsed += delta
-	elif has_dashed:
+		var v = player.velocity.x
+		var fd = v*16.0*delta
+		if absf(fd) > absf(v): fd = v
+		player.velocity.x -= fd
+		if absf(v) <= 16.0:
+			# End dash here
 			player.apply_gravity = true
 			player.can_move = true
 			if player.is_falling: sprite.play(&\"float\")
-			duration_time_elapsed = 0.0
-			has_dashed = false
+			is_dashing = false
 
 
 func _ready() -> void:
@@ -60,11 +53,11 @@ func _ready() -> void:
 
 
 func start(dash_direction: float):
-	speed = player.speed * dash_multiplier
 	direction = dash_direction
 	player.apply_gravity = false
 	player.can_move = false
 	player.velocity.y = 0
+	player.velocity.x = 0
 	sprite.play(&\"dash_start\")
 "
 
@@ -77,13 +70,14 @@ script/source = "extends Ability
 @onready var roll_coll_shape := $\"../RollCollisionShape\"
 @onready var sprite: AnimatedSprite2D = $\"../AnimatedSprite2D\"
 @onready var player := $\"..\"
-@export var speed: float = 512
+@export var initial_speed: float = 400
 var direction: float
 var is_rolling: bool
 
 
 func _on_anim_finished():
 	if sprite.animation == &\"roll\":
+		# End roll here
 		player.can_move = true
 		default_coll_shape.disabled = false
 		roll_coll_shape.disabled = true
@@ -91,8 +85,7 @@ func _on_anim_finished():
 
 
 func physics_update(_delta: float) -> void:
-	if is_rolling:
-		player.velocity.x = direction * speed
+	pass
 
 
 func _ready() -> void:
@@ -103,6 +96,7 @@ func _ready() -> void:
 func start(roll_direction: float):
 	direction = roll_direction
 	player.can_move = false
+	player.velocity.x = direction * initial_speed
 	default_coll_shape.disabled = true
 	roll_coll_shape.disabled = false
 	sprite.play(&\"roll\")
@@ -133,8 +127,6 @@ target = NodePath("..")
 
 [node name="Dash" type="Node2D" parent="."]
 script = SubResource("GDScript_0whg7")
-dash_multiplier = 15.0
-dash_duration = 0.2
 
 [node name="Roll" type="Node2D" parent="."]
 script = SubResource("GDScript_i50ve")

@@ -67,10 +67,13 @@ func _physics_process(delta: float) -> void:
 		if Input.is_action_just_pressed(&"dash"):
 			dash.start(fdir)
 	
-	if can_move and direction:
-		velocity.x = direction * speed
-	else:
-		velocity.x = move_toward(velocity.x, 0, speed)
+	# Check again because of abilities
+	if can_move:
+		# Movement
+		if direction:
+			velocity.x = direction * speed
+		else:
+			velocity.x = move_toward(velocity.x, 0, speed)
 	
 	move_and_slide()
 	
