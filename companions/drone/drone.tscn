@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=3 uid="uid://b1fnqvua20eve"]
+
+[ext_resource type="PackedScene" uid="uid://rppggx462e3f" path="res://companion.tscn" id="1_kcma8"]
+[ext_resource type="Script" path="res://companions/drone/drone.gd" id="2_e4d5s"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7sbpm"]
+radius = 8.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_hjg0u"]
+radius = 8.0
+height = 16.0
+
+[node name="Drone" instance=ExtResource("1_kcma8")]
+motion_mode = 1
+script = ExtResource("2_e4d5s")
+
+[node name="CollisionShape2D" parent="." index="0"]
+shape = SubResource("CircleShape2D_7sbpm")
+disabled = true
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="." index="1"]
+mesh = SubResource("SphereMesh_hjg0u")
