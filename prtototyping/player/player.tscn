@@ -34,6 +34,9 @@ func _on_anim_finished():
 
 
 func physics_update(delta: float) -> void:
+	if player.can_move and Input.is_action_just_pressed(&\"dash\"):
+		start()
+	
 	if is_dashing:
 		var v = player.velocity.x
 		var fd = v*16.0*delta
@@ -51,8 +54,8 @@ func _ready() -> void:
 	sprite.animation_finished.connect(_on_anim_finished)
 
 
-func start(dash_direction: float):
-	direction = dash_direction
+func start():
+	direction = player.facing_direction
 	player.apply_gravity = false
 	player.can_move = false
 	player.velocity.y = 0
@@ -84,7 +87,8 @@ func _on_anim_finished():
 
 
 func physics_update(_delta: float) -> void:
-	pass
+	if player.can_move and player.is_on_floor() and Input.is_action_just_pressed(&\"roll\"):
+		start()
 
 
 func _ready() -> void:
@@ -92,8 +96,8 @@ func _ready() -> void:
 	sprite.animation_finished.connect(_on_anim_finished)
 
 
-func start(roll_direction: float):
-	direction = roll_direction
+func start():
+	direction = player.facing_direction
 	player.can_move = false
 	player.velocity.x = direction * initial_speed
 	default_coll_shape.disabled = true
@@ -102,8 +106,9 @@ func start(roll_direction: float):
 	is_rolling = true
 "
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("abilities")]
 script = ExtResource("1_1ikub")
+abilities = [NodePath("Dash"), NodePath("Roll")]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_0ga1l")
