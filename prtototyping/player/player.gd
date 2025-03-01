@@ -6,6 +6,7 @@ signal landed
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var chat_bubble: ChatBubble = $ChatBubble
+@onready var jump_sound: AudioStreamPlayer2D = $JumpSound
 @export var companion: Companion
 @export var gravity: float = 981
 @export var speed: float = 128
@@ -71,6 +72,7 @@ func _physics_process(delta: float) -> void:
 		ground_coyote_time = 0
 		coyote_time = 0
 		velocity.y = jump_velocity
+		jump_sound.play()
 	
 	var direction := Input.get_axis(&"move_left", &"move_right")
 	if can_move:
