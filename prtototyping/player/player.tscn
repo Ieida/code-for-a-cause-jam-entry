@@ -185,13 +185,6 @@ script = SubResource("GDScript_0whg7")
 [node name="Roll" type="Node2D" parent="."]
 script = SubResource("GDScript_i50ve")
 
-[node name="ChatBubble" parent="." instance=ExtResource("5_43fer")]
-offset_left = -28.0
-offset_top = -38.0
-offset_right = 92.0
-offset_bottom = -26.0
-offset = Vector2(32, -32)
-
 [node name="FootstepSpawner" type="Node2D" parent="."]
 script = SubResource("GDScript_7id4j")
 
@@ -200,3 +193,10 @@ stream = ExtResource("6_mo633")
 
 [node name="DashSound" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("7_g2nby")
+
+[node name="ChatBubble" parent="." instance=ExtResource("5_43fer")]
+offset_left = -35.0
+offset_top = -38.5
+offset_right = 99.0
+offset_bottom = -25.5
+offset = Vector2(32, -32)
