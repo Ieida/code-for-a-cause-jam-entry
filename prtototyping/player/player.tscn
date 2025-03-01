@@ -34,7 +34,6 @@ func _on_anim_finished():
 	if sprite.animation == &\"dash_start\":
 		player.velocity.x = direction * initial_speed
 		sprite.play(&\"dash_loop\")
-		sound.play()
 		is_dashing = true
 
 
@@ -66,6 +65,7 @@ func start():
 	player.velocity.y = 0
 	player.velocity.x = 0
 	sprite.play(&\"dash_start\")
+	sound.play()
 "
 
 [sub_resource type="GDScript" id="GDScript_i50ve"]
