@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://caao78fb6xba"]
+[gd_scene load_steps=12 format=3 uid="uid://caao78fb6xba"]
 
 [ext_resource type="Script" path="res://prtototyping/player/player.gd" id="1_1ikub"]
 [ext_resource type="SpriteFrames" uid="uid://tt7vara404c8" path="res://prtototyping/character/sprite_frames.tres" id="1_wtdkr"]
@@ -107,6 +107,48 @@ func start():
 	is_rolling = true
 "
 
+[sub_resource type="GDScript" id="GDScript_7id4j"]
+resource_name = "footstep_spawner"
+script/source = "extends Node2D
+
+
+@export var steps_per_second: float = 2.4
+@onready var player: Player = $\"..\"
+@onready var footstep_scene: PackedScene = preload(\"res://extra_nodes/footstep/footstep.tscn\")
+var should_spawn: bool
+var time_elapsed: float
+
+
+func _on_player_landed():
+	spawn()
+	spawn()
+
+
+func _physics_process(delta: float) -> void:
+	if not player.is_on_floor() or not player.can_move or should_spawn and is_zero_approx(player.velocity.x):
+		should_spawn = false
+	elif player.is_on_floor() and player.can_move and not should_spawn and not is_zero_approx(player.velocity.x):
+		should_spawn = true
+		time_elapsed = 0
+		spawn()
+	
+	if should_spawn:
+		time_elapsed += delta
+		if time_elapsed >= 1.0 / steps_per_second:
+			time_elapsed = 0
+			spawn()
+
+
+func _ready() -> void:
+	player.landed.connect(_on_player_landed)
+
+
+func spawn():
+	var f = footstep_scene.instantiate() as AudioStreamPlayer2D
+	get_tree().current_scene.add_child(f)
+	f.global_position = global_position
+"
+
 [node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("abilities")]
 script = ExtResource("1_1ikub")
 abilities = [NodePath("Dash"), NodePath("Roll")]
@@ -123,7 +165,10 @@ texture_filter = 1
 material = SubResource("ShaderMaterial_3nph4")
 position = Vector2(0, -9)
 sprite_frames = ExtResource("1_wtdkr")
-animation = &"idle"
+animation = &"run"
+
+[node name="Ears" type="AudioListener2D" parent="."]
+position = Vector2(0, -16)
 
 [node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("target")]
 top_level = true
@@ -142,3 +187,6 @@ offset_top = -38.0
 offset_right = 92.0
 offset_bottom = -26.0
 offset = Vector2(32, -32)
+
+[node name="FootstepSpawner" type="Node2D" parent="."]
+script = SubResource("GDScript_7id4j")

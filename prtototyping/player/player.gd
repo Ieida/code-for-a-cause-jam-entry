@@ -1,6 +1,9 @@
 class_name Player extends CharacterBody2D
 
 
+signal landed
+
+
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var chat_bubble: ChatBubble = $ChatBubble
 @export var companion: Companion
@@ -32,6 +35,7 @@ func _on_anim_finished():
 		can_move = true
 		is_falling = false
 		animated_sprite.play(&"idle")
+		landed.emit()
 
 
 func _on_chat_bubble_writing_finished():
@@ -128,5 +132,3 @@ func respawn():
 
 func say(chat: String):
 	chat_bubble.text = chat
-	await get_tree().create_timer(5).timeout
-	companion.chat_say("00101011...")

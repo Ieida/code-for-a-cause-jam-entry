@@ -1,0 +1,21 @@
+[gd_scene load_steps=7 format=3 uid="uid://byr5pqg16xw6p"]
+
+[ext_resource type="AudioStream" uid="uid://bl20gnsreo1nw" path="res://sounds/footsteps/leaf/leaf-1.wav" id="1_5ojnd"]
+[ext_resource type="AudioStream" uid="uid://blueklxr4vrqs" path="res://sounds/footsteps/leaf/leaf-2.wav" id="2_c8orw"]
+[ext_resource type="AudioStream" uid="uid://chjbkrs2x1hbv" path="res://sounds/footsteps/leaf/leaf-3.wav" id="3_3qc6o"]
+[ext_resource type="AudioStream" uid="uid://bvo85orpapnok" path="res://sounds/footsteps/leaf/leaf-4.wav" id="4_el2yn"]
+[ext_resource type="AudioStream" uid="uid://w6cs4bhxjymb" path="res://sounds/footsteps/leaf/leaf-5.wav" id="5_wqytx"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_dvrrt"]
+random_pitch = 1.2
+random_volume_offset_db = 2.0
+streams_count = 5
+stream_0/stream = ExtResource("1_5ojnd")
+stream_1/stream = ExtResource("2_c8orw")
+stream_2/stream = ExtResource("3_3qc6o")
+stream_3/stream = ExtResource("4_el2yn")
+stream_4/stream = ExtResource("5_wqytx")
+
+[node name="Footstep" type="AudioStreamPlayer2D"]
+stream = SubResource("AudioStreamRandomizer_dvrrt")
+autoplay = true
