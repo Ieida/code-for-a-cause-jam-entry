@@ -1,12 +1,28 @@
-[gd_scene load_steps=3 format=3 uid="uid://rppggx462e3f"]
+[gd_scene load_steps=5 format=3 uid="uid://rppggx462e3f"]
 
 [ext_resource type="Script" path="res://companion.gd" id="1_ovvqi"]
+[ext_resource type="PackedScene" uid="uid://b0o6p7q7me373" path="res://chat_bubble/chat_bubble.tscn" id="2_ua0hb"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_kvgea"]
 radius = 16.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_70k2e"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"new_animation",
+"speed": 5.0
+}]
 
 [node name="Companion" type="CharacterBody2D"]
 script = ExtResource("1_ovvqi")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_kvgea")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = SubResource("SpriteFrames_70k2e")
+animation = &"new_animation"
+
+[node name="ChatBubble" parent="." instance=ExtResource("2_ua0hb")]

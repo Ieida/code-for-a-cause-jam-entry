@@ -1,9 +1,13 @@
-[gd_scene load_steps=5 format=4 uid="uid://t5kuwcbx0nu6"]
+[gd_scene load_steps=7 format=4 uid="uid://t5kuwcbx0nu6"]
 
 [ext_resource type="PackedScene" uid="uid://caao78fb6xba" path="res://prtototyping/player/player.tscn" id="1_gd44x"]
 [ext_resource type="TileSet" uid="uid://dgbcp2rvfbvod" path="res://prtototyping/tile_set.tres" id="2_odsbc"]
 [ext_resource type="TileSet" uid="uid://cqlnyo4jv2s2y" path="res://prtototyping/reset_tile_set.tres" id="3_wjwxm"]
 [ext_resource type="PackedScene" uid="uid://b1fnqvua20eve" path="res://companions/drone/drone.tscn" id="4_tryqi"]
+[ext_resource type="Script" path="res://player_dialogue_trigger/player_dialogue_trigger.gd" id="5_ko0g0"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vgv2l"]
+size = Vector2(128, 128)
 
 [node name="Level" type="Node2D"]
 
@@ -18,9 +22,6 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.0779167, 0.075, 0.1, 1)
 
-[node name="Player" parent="." instance=ExtResource("1_gd44x")]
-position = Vector2(320, 171)
-
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 modulate = Color(0.5, 0.5, 0.5, 1)
 z_index = 1
@@ -32,6 +33,18 @@ tile_set = ExtResource("2_odsbc")
 tile_map_data = PackedByteArray("AAAbAAcAAgAAAAAAAQAcAAcAAgAAAAAAAQAdAAcAAgAAAAAAAQAeAAcAAgAAAAAAAQAfAAcAAgAAAAAAAQAkAAUAAgAAAAAAAQAkAAQAAgAAAAAAAQAkAAMAAgAAAAAAAQAkAAIAAgAAAAAAAQAkAAEAAgAAAAAAAQAkAAAAAgAAAAAAAQAkAP//AgAAAAAAAQAkAP7/AgAAAAAAAQD0/wMAAgAAAAAAAQD0/wIAAgAAAAAAAQD0/wEAAgAAAAAAAQD0/wAAAgAAAAAAAQD0////AgAAAAAAAQD0//7/AgAAAAAAAQD0//3/AgAAAAAAAQD0//z/AgAAAAAAAQA=")
 tile_set = ExtResource("3_wjwxm")
 
+[node name="Player" parent="." node_paths=PackedStringArray("companion") instance=ExtResource("1_gd44x")]
+position = Vector2(320, 171)
+companion = NodePath("../Drone")
+
 [node name="Drone" parent="." node_paths=PackedStringArray("player") instance=ExtResource("4_tryqi")]
 position = Vector2(277, 116)
 player = NodePath("../Player")
+
+[node name="PlayerDialogueTrigger" type="Area2D" parent="."]
+script = ExtResource("5_ko0g0")
+text = "When do you think we'll reach the Oasis?"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDialogueTrigger"]
+position = Vector2(1088, 128)
+shape = SubResource("RectangleShape2D_vgv2l")

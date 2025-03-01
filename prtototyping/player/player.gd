@@ -2,6 +2,8 @@ class_name Player extends CharacterBody2D
 
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
+@onready var chat_bubble: ChatBubble = $ChatBubble
+@export var companion: Companion
 @export var gravity: float = 981
 @export var speed: float = 128
 @export var jump_velocity = -300
@@ -30,6 +32,11 @@ func _on_anim_finished():
 		can_move = true
 		is_falling = false
 		animated_sprite.play(&"idle")
+
+
+func _on_chat_bubble_writing_finished():
+	await get_tree().create_timer(5).timeout
+	chat_bubble.hide()
 
 
 func _physics_process(delta: float) -> void:
@@ -109,6 +116,7 @@ func _ready() -> void:
 	spawn_position = global_position
 	animated_sprite.animation_finished.connect(_on_anim_finished)
 	animated_sprite.play(&"idle")
+	chat_bubble.writing_finished.connect(_on_chat_bubble_writing_finished)
 	# Abilities
 	for a in abilities:
 		a.ability_ready()
@@ -116,3 +124,9 @@ func _ready() -> void:
 
 func respawn():
 	global_position = spawn_position
+
+
+func say(chat: String):
+	chat_bubble.text = chat
+	await get_tree().create_timer(5).timeout
+	companion.chat_say("00101011...")

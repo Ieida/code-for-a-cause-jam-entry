@@ -1,9 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://caao78fb6xba"]
+[gd_scene load_steps=11 format=3 uid="uid://caao78fb6xba"]
 
 [ext_resource type="Script" path="res://prtototyping/player/player.gd" id="1_1ikub"]
 [ext_resource type="SpriteFrames" uid="uid://tt7vara404c8" path="res://prtototyping/character/sprite_frames.tres" id="1_wtdkr"]
 [ext_resource type="Shader" path="res://shaders/outline.gdshader" id="2_0qtmk"]
 [ext_resource type="Script" path="res://extra_scripts/follow.gd" id="3_7iu7l"]
+[ext_resource type="PackedScene" uid="uid://b0o6p7q7me373" path="res://chat_bubble/chat_bubble.tscn" id="5_43fer"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0ga1l"]
 size = Vector2(16, 42)
@@ -134,3 +135,10 @@ script = SubResource("GDScript_0whg7")
 
 [node name="Roll" type="Node2D" parent="."]
 script = SubResource("GDScript_i50ve")
+
+[node name="ChatBubble" parent="." instance=ExtResource("5_43fer")]
+offset_left = -28.0
+offset_top = -38.0
+offset_right = 92.0
+offset_bottom = -26.0
+offset = Vector2(32, -32)
