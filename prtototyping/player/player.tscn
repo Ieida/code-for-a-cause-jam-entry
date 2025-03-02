@@ -119,6 +119,7 @@ script/source = "extends Node2D
 @export var steps_per_second: float = 2.4
 @onready var player: Player = $\"..\"
 @onready var footstep_scene: PackedScene = preload(\"res://extra_nodes/footstep/footstep.tscn\")
+@onready var new_steps_per_second: float = steps_per_second
 var should_spawn: bool
 var time_elapsed: float
 
@@ -137,8 +138,12 @@ func _physics_process(delta: float) -> void:
 		spawn()
 	
 	if should_spawn:
+		if absf(player.velocity.x) < 64.0:
+			new_steps_per_second = (absf(player.velocity.x) / 64.0) * steps_per_second
+		else:
+			new_steps_per_second = (absf(player.velocity.x) / 128.0) * steps_per_second
 		time_elapsed += delta
-		if time_elapsed >= 1.0 / steps_per_second:
+		if time_elapsed >= 1.0 / new_steps_per_second:
 			time_elapsed = 0
 			spawn()
 
@@ -169,7 +174,9 @@ texture_filter = 1
 material = SubResource("ShaderMaterial_3nph4")
 position = Vector2(0, -9)
 sprite_frames = ExtResource("1_wtdkr")
-animation = &"run"
+animation = &"walk"
+frame = 1
+frame_progress = 0.776883
 
 [node name="Ears" type="AudioListener2D" parent="."]
 position = Vector2(0, -16)

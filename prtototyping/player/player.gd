@@ -78,6 +78,8 @@ func _physics_process(delta: float) -> void:
 	if can_move:
 		# Movement
 		if direction:
+			if direction > 0.0 and direction < 0.2: direction = 0.2
+			elif direction < 0.0 and direction > -0.2: direction = -0.2
 			velocity.x = direction * speed
 		else:
 			velocity.x = move_toward(velocity.x, 0, speed)
@@ -92,10 +94,25 @@ func _physics_process(delta: float) -> void:
 			# If grounded, set ground coyote.
 			ground_coyote_time = default_ground_coyote_time
 			if velocity.x > 2.0:
-				animated_sprite.play(&"run")
+				if velocity.x < 64.0:
+					var sp = velocity.x / 64.0
+					animated_sprite.speed_scale = sp
+					animated_sprite.play(&"walk")
+				else:
+					var sp = velocity.x / 128.0
+					animated_sprite.speed_scale = sp
+					animated_sprite.play(&"run")
 			elif velocity.x < -2.0:
-				animated_sprite.play(&"run")
+				if velocity.x > -64.0:
+					var sp = absf(velocity.x) / 64.0
+					animated_sprite.speed_scale = sp
+					animated_sprite.play(&"walk")
+				else:
+					var sp = absf(velocity.x) / 128.0
+					animated_sprite.speed_scale = sp
+					animated_sprite.play(&"run")
 			else:
+				animated_sprite.speed_scale = 1
 				animated_sprite.play(&"idle")
 		elif velocity.y < -2.0:
 			animated_sprite.play(&"ascend")
