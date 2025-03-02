@@ -1,13 +1,15 @@
-[gd_scene load_steps=7 format=4 uid="uid://t5kuwcbx0nu6"]
+[gd_scene load_steps=8 format=4 uid="uid://t5kuwcbx0nu6"]
 
 [ext_resource type="PackedScene" uid="uid://caao78fb6xba" path="res://prtototyping/player/player.tscn" id="1_gd44x"]
 [ext_resource type="TileSet" uid="uid://dgbcp2rvfbvod" path="res://prtototyping/tile_set.tres" id="2_odsbc"]
 [ext_resource type="TileSet" uid="uid://cqlnyo4jv2s2y" path="res://prtototyping/reset_tile_set.tres" id="3_wjwxm"]
 [ext_resource type="PackedScene" uid="uid://b1fnqvua20eve" path="res://companions/drone/drone.tscn" id="4_tryqi"]
-[ext_resource type="Script" path="res://player_dialogue_trigger/player_dialogue_trigger.gd" id="5_ko0g0"]
+[ext_resource type="Script" path="res://dialogue_trigger/dialogue_trigger.gd" id="5_ko0g0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vgv2l"]
 size = Vector2(128, 128)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_xr75g"]
 
 [node name="Level" type="Node2D"]
 
@@ -41,10 +43,23 @@ companion = NodePath("../Drone")
 position = Vector2(277, 116)
 player = NodePath("../Player")
 
-[node name="PlayerDialogueTrigger" type="Area2D" parent="."]
+[node name="DialogueTrigger" type="Area2D" parent="."]
 script = ExtResource("5_ko0g0")
-text = "When do you think we'll reach the Oasis?"
+disable_after_trigger = true
+is_main_line_companion = true
+main_line = "When do you think we'll reach The Oasis?"
+respond = true
+response = "I'm not sure..."
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDialogueTrigger"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DialogueTrigger"]
 position = Vector2(1088, 128)
 shape = SubResource("RectangleShape2D_vgv2l")
+
+[node name="DialogueTrigger2" type="Area2D" parent="."]
+position = Vector2(344, 136)
+script = ExtResource("5_ko0g0")
+main_line = "main line"
+response = "response"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DialogueTrigger2"]
+shape = SubResource("CircleShape2D_xr75g")

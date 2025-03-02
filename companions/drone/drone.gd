@@ -23,6 +23,5 @@ func _ready() -> void:
 	chat_bubble.writing_finished.connect(_on_chat_bubble_writing_finished)
 
 
-func chat_say(chat: String):
-	#await get_tree().create_timer(2).timeout
-	chat_bubble.text = chat
+func say(line: String):
+	chat_bubble.text = line

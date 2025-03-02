@@ -149,5 +149,5 @@ func respawn():
 	global_position = spawn_position
 
 
-func say(chat: String):
-	chat_bubble.text = chat
+func say(line: String):
+	chat_bubble.text = line
