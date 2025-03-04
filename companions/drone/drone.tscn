@@ -1,0 +1,34 @@
+[gd_scene load_steps=7 format=3 uid="uid://b1fnqvua20eve"]
+
+[ext_resource type="PackedScene" uid="uid://rppggx462e3f" path="res://companion.tscn" id="1_kcma8"]
+[ext_resource type="Script" path="res://companions/drone/drone.gd" id="2_e4d5s"]
+[ext_resource type="Shader" path="res://shaders/outline.gdshader" id="3_2sm5k"]
+[ext_resource type="SpriteFrames" uid="uid://br4o0r4m366ii" path="res://companions/drone/sprite_frames.tres" id="3_hhqtj"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7sbpm"]
+radius = 8.0
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_tr3fu"]
+shader = ExtResource("3_2sm5k")
+shader_parameter/outline_color = Color(0.25, 0.6375, 1, 1)
+
+[node name="Drone" instance=ExtResource("1_kcma8")]
+collision_layer = 0
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("2_e4d5s")
+
+[node name="CollisionShape2D" parent="." index="0"]
+shape = SubResource("CircleShape2D_7sbpm")
+
+[node name="AnimatedSprite2D" parent="." index="1"]
+material = SubResource("ShaderMaterial_tr3fu")
+sprite_frames = ExtResource("3_hhqtj")
+animation = &"idle"
+
+[node name="ChatBubble" parent="." index="2"]
+offset_left = -35.0
+offset_top = -38.5
+offset_right = 99.0
+offset_bottom = -25.5
+offset = Vector2(32, -32)

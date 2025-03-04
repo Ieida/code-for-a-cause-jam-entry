@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://byr5pqg16xw6p"]
+
+[ext_resource type="AudioStream" uid="uid://c607gvt4s8gdl" path="res://sounds/footsteps/female_footstep.wav" id="1_sp3jb"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_dvrrt"]
+random_pitch = 1.2
+random_volume_offset_db = 2.0
+streams_count = 1
+stream_0/stream = ExtResource("1_sp3jb")
+
+[node name="Footstep" type="AudioStreamPlayer2D"]
+stream = SubResource("AudioStreamRandomizer_dvrrt")
+autoplay = true

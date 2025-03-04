@@ -1,0 +1,14 @@
+[gd_resource type="SpriteFrames" load_steps=2 format=3 uid="uid://br4o0r4m366ii"]
+
+[ext_resource type="Texture2D" uid="uid://3y3flq8qe52m" path="res://companions/drone/Drone.png" id="1_ciy8f"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_ciy8f")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
