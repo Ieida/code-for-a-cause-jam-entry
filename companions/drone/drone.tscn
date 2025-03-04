@@ -1,8 +1,8 @@
 [gd_scene load_steps=7 format=3 uid="uid://b1fnqvua20eve"]
 
 [ext_resource type="PackedScene" uid="uid://rppggx462e3f" path="res://companion.tscn" id="1_kcma8"]
-[ext_resource type="Script" path="res://companions/drone/drone.gd" id="2_e4d5s"]
-[ext_resource type="Shader" path="res://shaders/outline.gdshader" id="3_2sm5k"]
+[ext_resource type="Script" uid="uid://dhm5vuyjplbhm" path="res://companions/drone/drone.gd" id="2_e4d5s"]
+[ext_resource type="Shader" uid="uid://3md4c5qouqg8" path="res://shaders/outline.gdshader" id="3_2sm5k"]
 [ext_resource type="SpriteFrames" uid="uid://br4o0r4m366ii" path="res://companions/drone/sprite_frames.tres" id="3_hhqtj"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_7sbpm"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://rppggx462e3f"]
 
-[ext_resource type="Script" path="res://companion.gd" id="1_ovvqi"]
+[ext_resource type="Script" uid="uid://c0w7pauk5je4h" path="res://companion.gd" id="1_ovvqi"]
 [ext_resource type="PackedScene" uid="uid://b0o6p7q7me373" path="res://chat_bubble/chat_bubble.tscn" id="2_ua0hb"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_kvgea"]

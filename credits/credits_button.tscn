@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://dsrolpwx1j6qd"]
 
 [ext_resource type="PackedScene" uid="uid://bb52xop606vr4" path="res://menu_button/menu_button.tscn" id="1_fx28r"]
-[ext_resource type="Script" path="res://credits/credits_button.gd" id="2_qm1rr"]
+[ext_resource type="Script" uid="uid://d0cyal1fyiixq" path="res://credits/credits_button.gd" id="2_qm1rr"]
 
 [node name="CreditsButton" instance=ExtResource("1_fx28r")]
 anchors_preset = 8
