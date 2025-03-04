@@ -1,7 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://b0o6p7q7me373"]
+[gd_scene load_steps=4 format=3 uid="uid://b0o6p7q7me373"]
 
 [ext_resource type="Script" path="res://chat_bubble/chat_bubble.gd" id="1_4nlmm"]
-[ext_resource type="FontFile" uid="uid://0qpolkhr2dfn" path="res://fonts/PixeloidMono.otf" id="1_eh7lg"]
+[ext_resource type="LabelSettings" uid="uid://daehlw10380c1" path="res://default_label.tres" id="2_8nnrd"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_63qo4"]
 content_margin_left = 1.0
@@ -9,12 +9,6 @@ content_margin_top = 1.0
 content_margin_right = 1.0
 content_margin_bottom = 1.0
 bg_color = Color(0, 0, 0, 0.333333)
-
-[sub_resource type="LabelSettings" id="LabelSettings_di7f0"]
-font = ExtResource("1_eh7lg")
-font_size = 9
-outline_size = 3
-outline_color = Color(0, 0, 0, 1)
 
 [node name="ChatBubble" type="PanelContainer"]
 z_index = 4096
@@ -34,4 +28,4 @@ layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 0
 text = "The quick brown fox..."
-label_settings = SubResource("LabelSettings_di7f0")
+label_settings = ExtResource("2_8nnrd")

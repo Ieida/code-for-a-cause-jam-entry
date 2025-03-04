@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://4jgmfq4v3lk2"]
+
+[ext_resource type="Texture2D" uid="uid://6xgomujnjsv0" path="res://crystal/life_crystal.png" id="1_ipo73"]
+
+[node name="Crystal" type="Sprite2D"]
+texture_filter = 1
+texture = ExtResource("1_ipo73")

@@ -5,8 +5,8 @@
 [ext_resource type="Shader" path="res://shaders/outline.gdshader" id="2_0qtmk"]
 [ext_resource type="Script" path="res://extra_scripts/follow.gd" id="3_7iu7l"]
 [ext_resource type="PackedScene" uid="uid://b0o6p7q7me373" path="res://chat_bubble/chat_bubble.tscn" id="5_43fer"]
-[ext_resource type="AudioStream" uid="uid://dyhp3awubyoo4" path="res://sounds/Jump(placeholder).wav" id="6_mo633"]
-[ext_resource type="AudioStream" uid="uid://bsv77tnhpdr4k" path="res://sounds/Dash(placeholder).wav" id="7_g2nby"]
+[ext_resource type="AudioStream" uid="uid://c607gvt4s8gdl" path="res://sounds/footsteps/female_footstep.wav" id="5_ewta4"]
+[ext_resource type="AudioStream" uid="uid://ck71xn4h4noex" path="res://sounds/woosh.wav" id="5_swbvo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0ga1l"]
 size = Vector2(16, 42)
@@ -25,8 +25,11 @@ script/source = "extends Ability
 @onready var sprite: AnimatedSprite2D = $\"../AnimatedSprite2D\"
 @onready var sound: AudioStreamPlayer2D = $\"../DashSound\"
 @onready var player := $\"..\"
-@export var initial_speed: float = 4096
+@export var initial_speed: float = 1024
+@export var cooldown_time: float = 2.0
 var direction: float
+var cooldown_time_elapsed: float
+var has_dashed: bool
 var is_dashing: bool
 
 
@@ -37,28 +40,52 @@ func _on_anim_finished():
 		is_dashing = true
 
 
+func _on_player_landed():
+	has_dashed = false
+
+
 func physics_update(delta: float) -> void:
-	if player.can_move and Input.is_action_just_pressed(&\"dash\"):
+	if not has_dashed and cooldown_time_elapsed < cooldown_time:
+		cooldown_time_elapsed = minf(cooldown_time, cooldown_time_elapsed + delta)
+	
+	if not has_dashed and not is_on_cooldown() and player.can_move and Input.is_action_pressed(&\"dash\"):
 		start()
 	
 	if is_dashing:
 		var v = player.velocity.x
-		var fd = v*16.0*delta
+		var vr = 8.0
+		if Input.is_action_pressed(&\"dash\"): vr = 2.0
+		var fd = v*vr*delta
 		if absf(fd) > absf(v): fd = v
 		player.velocity.x -= fd
+		sprite.speed_scale = player.velocity.x / 128.0
 		if absf(v) <= 16.0:
-			# End dash here
-			player.apply_gravity = true
-			player.can_move = true
-			if player.is_falling: sprite.play(&\"float\")
-			is_dashing = false
+			end()
 
 
 func _ready() -> void:
 	sprite.animation_finished.connect(_on_anim_finished)
+	player.landed.connect(_on_player_landed)
+
+
+func end():
+	player.apply_gravity = true
+	player.can_move = true
+	if player.is_falling: sprite.play(&\"float\")
+	sprite.speed_scale = 1
+	player.jumps_left += 1
+	if player.is_on_floor():
+		has_dashed = false
+	is_dashing = false
+
+
+func is_on_cooldown() -> bool:
+	return not is_equal_approx(cooldown_time, cooldown_time_elapsed)
 
 
 func start():
+	has_dashed = true
+	cooldown_time_elapsed = 0
 	direction = player.facing_direction
 	player.apply_gravity = false
 	player.can_move = false
@@ -135,7 +162,6 @@ func _physics_process(delta: float) -> void:
 	elif player.is_on_floor() and player.can_move and not should_spawn and not is_zero_approx(player.velocity.x):
 		should_spawn = true
 		time_elapsed = 0
-		spawn()
 	
 	if should_spawn:
 		if absf(player.velocity.x) < 64.0:
@@ -172,11 +198,9 @@ shape = SubResource("RectangleShape2D_wk74f")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 texture_filter = 1
 material = SubResource("ShaderMaterial_3nph4")
-position = Vector2(0, -9)
+position = Vector2(0, -10)
 sprite_frames = ExtResource("1_wtdkr")
-animation = &"walk"
-frame = 1
-frame_progress = 0.776883
+animation = &"fall"
 
 [node name="Ears" type="AudioListener2D" parent="."]
 position = Vector2(0, -16)
@@ -196,10 +220,10 @@ script = SubResource("GDScript_i50ve")
 script = SubResource("GDScript_7id4j")
 
 [node name="JumpSound" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("6_mo633")
+stream = ExtResource("5_ewta4")
 
 [node name="DashSound" type="AudioStreamPlayer2D" parent="."]
-stream = ExtResource("7_g2nby")
+stream = ExtResource("5_swbvo")
 
 [node name="ChatBubble" parent="." instance=ExtResource("5_43fer")]
 offset_left = -35.0

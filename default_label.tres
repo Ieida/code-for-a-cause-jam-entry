@@ -1,0 +1,7 @@
+[gd_resource type="LabelSettings" load_steps=2 format=3 uid="uid://daehlw10380c1"]
+
+[ext_resource type="FontFile" uid="uid://0qpolkhr2dfn" path="res://fonts/PixeloidMono.otf" id="1_tsg7f"]
+
+[resource]
+font = ExtResource("1_tsg7f")
+font_size = 9

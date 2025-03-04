@@ -1,0 +1,23 @@
+Female Character Sidescroller Template
+deviltearbasil
+https://deviltearbasil.itch.io/
+
+Keyboard and Controller UI Buttons
+dizeoakamatsu
+https://dizeoakamatsu.itch.io/
+
+Footsteps
+OwlStorm
+https://freesound.org/people/OwlStorm/
+
+Woosh
+jwsounddesign
+https://freesound.org/people/jwsounddesign/
+
+Piskel
+Julian Discottes
+https://www.piskelapp.com/
+
+Godot Engine
+Juan Linietsky, Ariel Manzur, Godot Community, Godot Foundation
+https://godotengine.org/

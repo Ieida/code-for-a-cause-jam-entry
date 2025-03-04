@@ -11,8 +11,6 @@ signal landed
 @export var gravity: float = 981
 @export var speed: float = 128
 @export var jump_velocity = -300
-@export var default_coyote_time: float = 0.5
-@export var default_ground_coyote_time: float = 0.5
 @export var abilities: Array[Ability]
 var apply_gravity: bool = true
 var can_jump: bool = true
@@ -20,13 +18,11 @@ var can_move: bool = true
 var facing_direction: float:
 	get:
 		return -1.0 if animated_sprite.flip_h else 1.0
-	set (value):
+	set(value):
 		animated_sprite.flip_h = true if value < 0.0 else false
 var is_falling: bool
+var jumps_left: int
 var spawn_position: Vector2
-#coyote time var
-var coyote_time: float
-var ground_coyote_time: float
 
 
 func _on_anim_finished():
@@ -34,14 +30,21 @@ func _on_anim_finished():
 		animated_sprite.play(&"fall")
 	elif animated_sprite.animation == &"land":
 		can_move = true
-		is_falling = false
 		animated_sprite.play(&"idle")
-		landed.emit()
+		jumps_left = 1
 
 
 func _on_chat_bubble_writing_finished():
 	await get_tree().create_timer(5).timeout
 	chat_bubble.hide()
+
+
+func _on_credits_closed():
+	process_mode = ProcessMode.PROCESS_MODE_INHERIT
+
+
+func _on_credits_opened():
+	process_mode = ProcessMode.PROCESS_MODE_DISABLED
 
 
 func _physics_process(delta: float) -> void:
@@ -52,27 +55,10 @@ func _physics_process(delta: float) -> void:
 	# Add the gravity.
 	if apply_gravity and not is_on_floor():
 		velocity.y += gravity * delta
-
-	# Is on ground buffer.
-	if ground_coyote_time > 0:
-		can_jump = true
-	else:
-		can_jump = false
-	# If jump, apply coyote.
-	if Input.is_action_just_pressed(&"jump"):
-		coyote_time = default_coyote_time
-	# Deduct coyote.
-	if coyote_time > 0:
-		coyote_time -= delta
-	else:
-		coyote_time = 0
 	
 	# Handle jump.
-	if can_move and coyote_time > 0 and can_jump:
-		ground_coyote_time = 0
-		coyote_time = 0
-		velocity.y = jump_velocity
-		jump_sound.play()
+	if can_move and can_jump and jumps_left > 0 and Input.is_action_pressed(&"jump"):
+		jump()
 	
 	var direction := Input.get_axis(&"move_left", &"move_right")
 	if can_move:
@@ -84,6 +70,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			velocity.x = move_toward(velocity.x, 0, speed)
 	
+	var was_on_floor = is_on_floor()
 	move_and_slide()
 	
 	# Animations
@@ -91,8 +78,6 @@ func _physics_process(delta: float) -> void:
 		if velocity.x > 2.0: animated_sprite.flip_h = false
 		if velocity.x < -2.0: animated_sprite.flip_h = true
 		if is_on_floor():
-			# If grounded, set ground coyote.
-			ground_coyote_time = default_ground_coyote_time
 			if velocity.x > 2.0:
 				if velocity.x < 64.0:
 					var sp = velocity.x / 64.0
@@ -116,15 +101,15 @@ func _physics_process(delta: float) -> void:
 				animated_sprite.play(&"idle")
 		elif velocity.y < -2.0:
 			animated_sprite.play(&"ascend")
-		# If not grounded, deduct coyote (jump still allowed)
-		elif ground_coyote_time > 0:
-			ground_coyote_time -= delta
+			is_falling = false
 		
-		if is_falling and velocity.y < 2.0:
+		if not was_on_floor and is_on_floor():
 			can_move = false
+			is_falling = false
 			velocity.x = 0
 			animated_sprite.play(&"land")
-		elif not is_falling and velocity.y > 2.0:
+			landed.emit()
+		elif not is_falling and not is_on_floor() and velocity.y > 2.0:
 			is_falling = true
 			animated_sprite.play(&"float")
 
@@ -140,9 +125,17 @@ func _ready() -> void:
 	animated_sprite.animation_finished.connect(_on_anim_finished)
 	animated_sprite.play(&"idle")
 	chat_bubble.writing_finished.connect(_on_chat_bubble_writing_finished)
+	Credits.closed.connect(_on_credits_closed)
+	Credits.opened.connect(_on_credits_opened)
 	# Abilities
 	for a in abilities:
 		a.ability_ready()
+
+
+func jump():
+	jumps_left = maxi(0, jumps_left - 1)
+	velocity.y = jump_velocity
+	jump_sound.play()
 
 
 func respawn():
