@@ -1,9 +1,9 @@
 [gd_scene load_steps=14 format=3 uid="uid://caao78fb6xba"]
 
-[ext_resource type="Script" path="res://prtototyping/player/player.gd" id="1_1ikub"]
+[ext_resource type="Script" uid="uid://bsap6xl61liwq" path="res://prtototyping/player/player.gd" id="1_1ikub"]
 [ext_resource type="SpriteFrames" uid="uid://tt7vara404c8" path="res://prtototyping/character/sprite_frames.tres" id="1_wtdkr"]
-[ext_resource type="Shader" path="res://shaders/outline.gdshader" id="2_0qtmk"]
-[ext_resource type="Script" path="res://extra_scripts/follow.gd" id="3_7iu7l"]
+[ext_resource type="Shader" uid="uid://3md4c5qouqg8" path="res://shaders/outline.gdshader" id="2_0qtmk"]
+[ext_resource type="Script" uid="uid://cbyh2o8262tnb" path="res://extra_scripts/follow.gd" id="3_7iu7l"]
 [ext_resource type="PackedScene" uid="uid://b0o6p7q7me373" path="res://chat_bubble/chat_bubble.tscn" id="5_43fer"]
 [ext_resource type="AudioStream" uid="uid://c607gvt4s8gdl" path="res://sounds/footsteps/female_footstep.wav" id="5_ewta4"]
 [ext_resource type="AudioStream" uid="uid://ck71xn4h4noex" path="res://sounds/woosh.wav" id="5_swbvo"]

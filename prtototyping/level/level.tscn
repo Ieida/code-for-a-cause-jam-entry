@@ -5,7 +5,7 @@
 [ext_resource type="TileSet" uid="uid://dgbcp2rvfbvod" path="res://prtototyping/tile_set.tres" id="2_odsbc"]
 [ext_resource type="TileSet" uid="uid://cqlnyo4jv2s2y" path="res://prtototyping/reset_tile_set.tres" id="3_wjwxm"]
 [ext_resource type="PackedScene" uid="uid://b1fnqvua20eve" path="res://companions/drone/drone.tscn" id="4_tryqi"]
-[ext_resource type="Script" path="res://dialogue_trigger/dialogue_trigger.gd" id="5_ko0g0"]
+[ext_resource type="Script" uid="uid://cuc3qv3ibeljh" path="res://dialogue_trigger/dialogue_trigger.gd" id="5_ko0g0"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vgv2l"]
 size = Vector2(128, 128)
